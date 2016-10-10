@@ -15,7 +15,8 @@
 2. Copy default/inputs.conf to local/inputs.conf
 3. In inputs.conf, change `disabled = true` to `disabled = false`
 4. Examine bin/starter_script.sh and make sure that the paths to the app directory and to the python3 executable are correct
-5. (re)start splunk
+5. Edit bin/PP_TAP_logs.py to add your API credentials to the `username` and `password` fields.
+6. (re)start splunk
 
 ### On the search head:
 1. Install the TA
