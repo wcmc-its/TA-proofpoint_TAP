@@ -5,7 +5,7 @@ from datetime import datetime, timezone, timedelta
 import json
 from pprint import pprint
 from urllib.parse import quote_plus
-import os, sys
+#import os, sys
 
 # credentials for the proofpoint API
 username = "redacted"
@@ -33,26 +33,34 @@ page = requests.get('https://tap-api-v2.proofpoint.com/v2/siem/all?format=JSON&i
 api_output = json.loads(page.text)
 
 # open log file for writing
-log_file = open(os.path.dirname(os.path.realpath(sys.argv[0])) + "/PP_TAP_logs.txt", "w")
+#log_file = open(os.path.dirname(os.path.realpath(sys.argv[0])) + "/PP_TAP_logs.txt", "w")
 
 # print each of our objects output
 # malicious URLs that were blocked
 for click in api_output["clicksBlocked"]:
-    print(api_output['queryEndTime'] + " clickBlocked " + str(click), log_file)
+    click["time"] = api_output['queryEndTime']
+    click["action"] = "clickBlocked"
+    print(json.dumps(click))
 
 # malicious URLs that were clicked on but not blocked
 for click in api_output["clicksPermitted"]:
-    print(api_output['queryEndTime'] + " clickPermitted " + str(click), log_file)
+    click["time"] = api_output['queryEndTime']
+    click["action"] = "clickPermitted"
+    print(json.dumps(click))
 
 # malicious messages that were blocked
 for message in api_output["messagesBlocked"]:
-    print(api_output['queryEndTime'] + " messageBlocked " + str(message), log_file)
+    message["time"] = api_output['queryEndTime']
+    message["action"] = "messageBlocked"
+    print(json.dumps(message))
 
 # malicious messages that were delivered
 for message in api_output["messagesDelivered"]:
-    print(api_output['queryEndTime'] + " messageDelivered " + str(message), log_file)
+    message["time"] = api_output['queryEndTime']
+    message["action"] = "messageDelivered"
+    print(json.dumps(message))
 
-log_file.close()
+#log_file.close()
 
 # print the shit
 #print(page.url)
